@@ -1,0 +1,30 @@
+# --- Core agent framework ---
+crewai==1.7.2
+crewai-tools
+
+# --- Vector DB / RAG ---
+chromadb
+sentence-transformers
+
+# --- LLM integration ---
+litellm
+litellm[proxy]
+groq
+fastapi  # Required by litellm for logging
+
+# --- Config ---
+python-dotenv
+
+# --- Web UI ---
+gradio==4.44.0
+
+# --- HTML to Markdown Conversion ---
+beautifulsoup4==4.12.3
+markdownify==0.11.6
+lxml==5.1.0
+
+# --- LiteLLM proxy/logging safety (can be removed if LiteLLM <1.45 is kept) ---
+#apscheduler
+#email-validator
+#fastapi
+#uvicorn
