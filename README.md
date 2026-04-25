@@ -70,7 +70,19 @@ python html_to_markdown.py --help
 
 ## Run AI Assistant
 
-Add your GROQ_API_KEY to .env file and run:
+Add your GROQ_API_KEY or OPENAI_API_KEY to .env file:
+
+```
+GROQ_API_KEY=<YOUR-API-KEY>
+LITELLM_LOG=WARNING
+```
+
+OR
+
+```
+OPENAI_API_KEY=<YOUR-API-KEY>
+LITELLM_LOG=WARNING
+```
 
 ### CLI Mode
 ```bash

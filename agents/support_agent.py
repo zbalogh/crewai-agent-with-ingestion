@@ -12,14 +12,37 @@ from rag.search import support_manual_search
 #    temperature=0.1,
 #)
 
-# Initialize the LLM with Groq's Llama 3.1 8B Instant model
-llm = LLM(
-    model="groq/llama-3.1-8b-instant",
-    api_key=os.getenv("GROQ_API_KEY"),
-    max_tokens=10000,  # Limit tokens per request
-    temperature=0.1,
-)
+# if there is GROQ_API_KEY in the environment, use Groq LLM
+if os.getenv("GROQ_API_KEY"):
+    print(f"🔄 Using Groq LLM with {os.getenv('GROQ_MODEL', 'groq/llama-3.1-8b-instant')} model.")
+    llm = LLM(
+        model=os.getenv("GROQ_MODEL", "groq/llama-3.1-8b-instant"),
+        api_key=os.getenv("GROQ_API_KEY"),
+        max_tokens=int(os.getenv("GROQ_MAX_TOKENS", 1500)),  # Limit tokens per request
+        temperature=float(os.getenv("GROQ_TEMPERATURE", 0.2)), # Adjust temperature for more focused responses
+        top_p=0.9,  # Use nucleus sampling for more coherent responses
+    )
 
+# if there is OPENAI_API_KEY in the environment, use OpenAI LLM
+elif os.getenv("OPENAI_API_KEY"):
+    print(f"🔄 Using OpenAI LLM with {os.getenv('OPENAI_MODEL', 'openai/gpt-4o-mini')} model.")
+    llm = LLM(
+        model=os.getenv("OPENAI_MODEL", "openai/gpt-4o-mini"),
+        api_key=os.getenv("OPENAI_API_KEY"),
+        max_tokens=int(os.getenv("OPENAI_MAX_TOKENS", 1500)),  # Limit tokens per request
+        temperature=float(os.getenv("OPENAI_TEMPERATURE", 0.2)), # Adjust temperature for more focused responses
+        top_p=0.9,  # Use nucleus sampling for more coherent responses
+    )
+
+# if no API key is found, raise an error: exit with an error message an non-zero exit code
+else:
+    print("❌ Error: No API key found for Groq or OpenAI. Please set GROQ_API_KEY or OPENAI_API_KEY in the environment.", file=sys.stderr)
+    sys.exit(1)
+
+
+# Create the support agent with the defined role, goal, backstory, tools, and LLM.
+# The agent is designed to provide accurate and customer-friendly answers to support questions
+# based on the official company manual content returned by the search tool.
 support_agent = Agent(
     role="Senior Customer Support Agent",
     goal=(
